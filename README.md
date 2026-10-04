@@ -9,7 +9,7 @@ Developed as part of an internship project at CodeAlpha, built with scikit-learn
 ## Structure
 
 ```
-car-price/
+CodeAlpha_CarPriceDetection/
 ├── data/car_price.csv        # ataset containing used car attributes
 ├── notebooks/exploration.ipynb  # Exploratory Data Analysis & feature engineering notes
 ├── src/
