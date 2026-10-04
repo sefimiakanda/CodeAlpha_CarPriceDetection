@@ -36,7 +36,8 @@ uv run uvicorn api:app --app-dir src --reload    # Launch local development serv
 
 Once running, open http://localhost:8000/docs to interact with the Swagger UI: choose POST /predict → Try it out → Execute.
 
-To launch the interactive notebook environment: `uv run jupyter lab`, ten open `notebooks/exploration.ipynb`.
+To launch the interactive notebook environment: `uv run jupyter lab`,
+ten open `notebooks/exploration.ipynb`.
 
 ## 🐳 Docker Containerization
 
