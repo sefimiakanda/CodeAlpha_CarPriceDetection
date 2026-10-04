@@ -40,7 +40,7 @@ To launch the interactive notebook environment:
 ```bash
 uv run jupyter lab
 ```
-Ten open `notebooks/exploration.ipynb`.
+Then open `notebooks/exploration.ipynb`.
 
 ## 🐳 Docker Containerization
 
