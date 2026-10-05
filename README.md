@@ -6,7 +6,7 @@ A production-ready machine learning pipeline and web service predicting used car
 
 Developed as part of an internship project at CodeAlpha, built with scikit-learn, served via FastAPI, and containerized using Docker.
 
-## Structure
+## 📂 Structure
 
 ```
 CodeAlpha_CarPriceDetection/
@@ -80,7 +80,7 @@ Note on Free Tier limitations: The service spins down after 15 minutes of inacti
 
 ## 👤 Author
 
-**Fidèle Miakanda Sefi** — *Data Science Intern at CodeAlpha*
+**Fidèle Miakanda** — *Data Science Intern at CodeAlpha*
   * [GitHub](https://github.com/sefimiakanda)
   * [LinkedIn](https://www.linkedin.com/in/fidèle-miakanda)
 
