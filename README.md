@@ -52,6 +52,14 @@ docker build -t car-price .              # Build image & train model during the 
 docker run --rm -p 8000:8000 car-price   # Run container; access API on http://localhost:8000/docs
 ```
 
+If the build stays at `uv sync` on Docker Desktop, retry with host networking:
+
+```bash
+docker build --network=host -t car-price .
+```
+
+This requires host networking to be enabled in Docker Desktop. If it is not available, restart Docker Desktop and check its network, VPN, firewall, or proxy configuration.
+
 ## ☁️ Deployment
 
 Render Deployment Instructions:
@@ -83,6 +91,5 @@ Note on Free Tier limitations: The service spins down after 15 minutes of inacti
 **Fidèle Miakanda** — *Data Science Intern at CodeAlpha*
   * [GitHub](https://github.com/sefimiakanda)
   * [LinkedIn](https://www.linkedin.com/in/fidèle-miakanda)
-
 
 
