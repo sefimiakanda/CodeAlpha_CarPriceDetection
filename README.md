@@ -9,7 +9,8 @@
 
 A production-ready machine learning pipeline and web service that predicts used car selling prices.
 
-🔗 **Live demo:** `https://car-price-prediction-qqrm.onrender.com/` *(the free tier may take about a minute to wake up)*
+🔗 **Live demo:** [https://car-price-prediction-qqrm.onrender.com/](https://car-price-prediction-qqrm.onrender.com/)
+*(the free tier may take about a minute to wake up)*
 
 ## 🎯 Project Overview & Objectives
 
