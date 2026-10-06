@@ -48,3 +48,14 @@ def test_invalid_fuel_type_is_rejected(client):
 
 def test_negative_price_is_rejected(client):
     assert client.post("/predict", json={**CAR, "Present_Price": -1}).status_code == 422
+
+
+def test_home_page_is_served(client):
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+
+
+def test_options_lists_known_cars(client):
+    body = client.get("/options").json()
+    assert "ritz" in body["car_names"]

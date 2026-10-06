@@ -4,18 +4,23 @@ Lancer :  uv run uvicorn api:app --app-dir src --reload
 Docs interactives : http://localhost:8000/docs
 """
 
+import json
 import logging
 import time
 from contextlib import asynccontextmanager
 from datetime import date
+from pathlib import Path
 from typing import Literal
 
 import joblib
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, ConfigDict, Field
 
-from train import FEATURES, MODEL_PATH, clean_car_name
+from train import FEATURES, METRICS_PATH, MODEL_PATH, clean_car_name
+
+STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("api")
@@ -59,11 +64,27 @@ async def lifespan(app: FastAPI):
     if not MODEL_PATH.exists():
         raise RuntimeError("Modèle introuvable. Lancez d'abord : uv run python src/train.py")
     app.state.model = joblib.load(MODEL_PATH)
+    # Pour l'interface web : noms de véhicules connus du modèle + erreur moyenne mesurée au test
+    encoder = app.state.model.named_steps["preprocessor"].named_transformers_["cat"].named_steps["onehot"]
+    app.state.car_names = sorted(str(name) for name in encoder.categories_[0])  # Car_Name = 1re colonne catégorielle
+    app.state.mae = json.loads(METRICS_PATH.read_text())["mae"] if METRICS_PATH.exists() else None
     logger.info("Modèle chargé depuis %s", MODEL_PATH)
     yield
 
 
 app = FastAPI(title="Car Price API", lifespan=lifespan)
+
+
+@app.get("/", include_in_schema=False)
+def home():
+    """Page d'accueil : le formulaire destiné aux utilisateurs."""
+    return FileResponse(STATIC_DIR / "index.html")
+
+
+@app.get("/options", include_in_schema=False)
+def options(request: Request):
+    """Données pour pré-remplir le formulaire (liste des modèles, erreur moyenne)."""
+    return {"car_names": request.app.state.car_names, "mae": request.app.state.mae}
 
 
 @app.get("/health")

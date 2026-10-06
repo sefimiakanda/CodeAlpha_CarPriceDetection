@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estimer le prix d'un véhicule d'occasion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2f1;--card:#fff;--ink:#16211f;--muted:#5d6b68;--line:#d5dedb;--accent:#0b6e5f;--accent-d:#084f44;--soft:#e2f1ee;--err:#b42318;--errbg:#fdecea}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1816;--card:#16231f;--ink:#e8f0ee;--muted:#9bb0aa;--line:#2b3d38;--accent:#3fb8a4;--accent-d:#2c9987;--soft:#1a2f2a;--err:#ff8a7a;--errbg:#3a1d19}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;line-height:1.5}
+main{max-width:980px;margin:0 auto;padding:32px 20px 48px}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.1;font-weight:800;margin:0 0 8px;letter-spacing:-.02em}
+.lead{color:var(--muted);margin:0 0 28px;max-width:60ch}
+.layout{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:start}
+@media(max-width:780px){.layout{grid-template-columns:1fr}}
+form,.result{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}
+.result{position:sticky;top:20px;min-height:300px;display:flex;flex-direction:column;justify-content:center}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+.full{grid-column:1/-1}
+label{display:block;font-weight:600;font-size:.95rem;margin-bottom:4px}
+.hint{display:block;font-weight:400;font-size:.8rem;color:var(--muted)}
+input,select{width:100%;padding:11px 12px;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px}
+input:focus,select:focus,button:focus-visible{outline:3px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.actions{display:flex;gap:12px;align-items:center;margin-top:22px;flex-wrap:wrap}
+button{font:inherit;font-weight:600;cursor:pointer;border-radius:10px;padding:13px 22px;border:0}
+.primary{background:var(--accent);color:#fff;flex:1;min-width:180px;font-size:1.05rem}
+.primary:hover{background:var(--accent-d)}
+.primary:disabled{opacity:.6;cursor:wait}
+.link{background:none;color:var(--accent);padding:8px 4px;text-decoration:underline}
+.empty{color:var(--muted)}
+.empty strong{display:block;color:var(--ink);font-size:1.15rem;margin-bottom:6px}
+.label{color:var(--muted);margin:0}
+.price{font-size:clamp(3rem,9vw,4.6rem);font-weight:800;line-height:1;letter-spacing:-.03em;color:var(--accent);margin:6px 0 2px}
+.unit{font-size:1.1rem;color:var(--muted);font-weight:600}
+.badge{display:inline-block;background:var(--soft);border-radius:999px;padding:5px 12px;font-size:.88rem;margin:14px 0 6px}
+.small{font-size:.82rem;color:var(--muted);margin:10px 0 0}
+.warn{background:var(--soft);padding:10px 12px;border-radius:10px;font-size:.9rem;margin-top:12px}
+.error{background:var(--errbg);color:var(--err);padding:12px 14px;border-radius:10px;font-weight:600}
+.spinner{width:34px;height:34px;border:4px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.spinner{animation-duration:3s}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <h1>Combien vaut votre véhicule d'occasion ?</h1>
+  <p class="lead">Renseignez ses caractéristiques : l'estimation s'affiche à droite en quelques secondes. Aucune inscription, rien n'est enregistré à votre nom.</p>
+
+  <div class="layout">
+    <form id="form" novalidate>
+      <div class="grid">
+        <div class="full">
+          <label for="name">Modèle du véhicule <span class="hint">Tapez quelques lettres puis choisissez dans la liste</span></label>
+          <input id="name" list="cars" required autocomplete="off" placeholder="ex. ritz">
+          <datalist id="cars"></datalist>
+        </div>
+        <div>
+          <label for="year">Année de mise en circulation</label>
+          <input id="year" type="number" min="1990" max="2100" required placeholder="2015">
+        </div>
+        <div>
+          <label for="kms">Kilométrage <span class="hint">en km</span></label>
+          <input id="kms" type="number" min="0" step="1000" required placeholder="45000">
+        </div>
+        <div class="full">
+          <label for="price">Prix du même véhicule neuf aujourd'hui <span class="hint">Même unité que l'estimation affichée</span></label>
+          <input id="price" type="number" min="0.1" step="0.01" required placeholder="5.6">
+        </div>
+        <div>
+          <label for="fuel">Carburant</label>
+          <select id="fuel"><option value="Petrol">Essence</option><option value="Diesel">Diesel</option><option value="CNG">Gaz (GNV)</option></select>
+        </div>
+        <div>
+          <label for="gear">Boîte de vitesses</label>
+          <select id="gear"><option value="Manual">Manuelle</option><option value="Automatic">Automatique</option></select>
+        </div>
+        <div>
+          <label for="seller">Vous vendez en tant que</label>
+          <select id="seller"><option value="Individual">Particulier</option><option value="Dealer">Professionnel (concessionnaire)</option></select>
+        </div>
+        <div>
+          <label for="owner">Propriétaires précédents</label>
+          <select id="owner"><option value="0">Aucun (première main)</option><option value="1">1</option><option value="2">2</option><option value="3">3 ou plus</option></select>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="primary" id="go" type="submit">Estimer le prix</button>
+        <button class="link" id="example" type="button">Remplir un exemple</button>
+      </div>
+    </form>
+
+    <section class="result" aria-live="polite" id="result">
+      <div class="empty"><strong>Votre estimation apparaîtra ici</strong>Remplissez le formulaire, puis cliquez sur « Estimer le prix ».</div>
+    </section>
+  </div>
+</main>
+
+<script>
+const UNIT = "";            // Unité affichée après le prix, ex. "lakhs ₹". Laisser vide si inconnue.
+const $ = (id) => document.getElementById(id);
+let carNames = [], mae = null;
+
+fetch("/options").then(r => r.json()).then(o => {
+  carNames = o.car_names || []; mae = o.mae;
+  $("cars").replaceChildren(...carNames.map(n => Object.assign(document.createElement("option"), {value: n})));
+}).catch(() => {});
+
+const FIELD_LABELS = {Car_Name:"Modèle", Year:"Année", Present_Price:"Prix du neuf", Driven_kms:"Kilométrage",
+  Fuel_Type:"Carburant", Selling_type:"Vendeur", Transmission:"Boîte de vitesses", Owner:"Propriétaires"};
+const fmt = (n) => n.toLocaleString("fr-FR", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const show = (html) => { $("result").innerHTML = html; };
+
+$("example").onclick = () => {
+  $("name").value = "ritz"; $("year").value = 2014; $("kms").value = 27000; $("price").value = 5.59;
+  $("fuel").value = "Petrol"; $("gear").value = "Manual"; $("seller").value = "Dealer"; $("owner").value = "0";
+};
+
+function countUp(el, target) {
+  if (matchMedia("(prefers-reduced-motion:reduce)").matches) { el.textContent = fmt(target); return; }
+  const start = performance.now();
+  const step = (now) => {
+    const t = Math.min((now - start) / 700, 1);
+    el.textContent = fmt(target * (1 - Math.pow(1 - t, 3)));
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+$("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const name = $("name").value.trim();
+  if (!name || !$("year").value || !$("kms").value || !$("price").value) {
+    show('<div class="error">Merci de remplir tous les champs avant de lancer l\'estimation.</div>'); return;
+  }
+  const payload = {Car_Name: name, Year: +$("year").value, Present_Price: +$("price").value, Driven_kms: +$("kms").value,
+    Fuel_Type: $("fuel").value, Selling_type: $("seller").value, Transmission: $("gear").value, Owner: +$("owner").value};
+
+  $("go").disabled = true;
+  show('<div><div class="spinner"></div><p class="label">Calcul en cours…</p><p class="small" id="slow" hidden>Le service se réveille après une période d\'inactivité : cela peut prendre jusqu\'à une minute.</p></div>');
+  const slow = setTimeout(() => { const s = $("slow"); if (s) s.hidden = false; }, 5000);
+  const ctrl = new AbortController(), abort = setTimeout(() => ctrl.abort(), 90000);
+  try {
+    const r = await fetch("/predict", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(payload), signal: ctrl.signal});
+    const data = await r.json().catch(() => ({}));
+    if (r.status === 422) {
+      const field = FIELD_LABELS[(data.detail?.[0]?.loc || []).at(-1)] || "formulaire";
+      throw new Error(`Vérifiez le champ « ${field} » : la valeur saisie n'est pas acceptée.`);
+    }
+    if (!r.ok) throw new Error("Le service est momentanément indisponible. Réessayez dans un instant.");
+    const known = carNames.length === 0 || carNames.includes(name.split(/\s+/).join(" "));
+    show(`<p class="label">Prix de vente estimé</p>
+      <p class="price"><span id="amount">0,00</span></p>${UNIT ? `<span class="unit">${UNIT}</span>` : ""}
+      ${mae ? `<div><span class="badge">Écart moyen du modèle : ± ${fmt(mae)}</span></div>` : ""}
+      ${known ? "" : '<div class="warn">Ce modèle ne figure pas dans la liste connue : l\'estimation sera moins fiable.</div>'}
+      <p class="small">Estimation indicative calculée à partir de 301 annonces. Elle ne remplace pas l'avis d'un professionnel.</p>`);
+    countUp($("amount"), data.predicted_selling_price);
+  } catch (err) {
+    show(`<div class="error">${err.name === "AbortError" ? "Le service met trop de temps à répondre. Réessayez dans un instant." : err.message}</div>`);
+  } finally { clearTimeout(slow); clearTimeout(abort); $("go").disabled = false; }
+});
+</script>
+</body>
+</html>
