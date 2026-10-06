@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Estimer le prix d'un véhicule d'occasion</title>
+<title>Estimate the Price of a Used Vehicle</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
@@ -49,60 +49,60 @@ button{font:inherit;font-weight:600;cursor:pointer;border-radius:10px;padding:13
 </head>
 <body>
 <main>
-  <h1>Combien vaut votre véhicule d'occasion ?</h1>
-  <p class="lead">Renseignez ses caractéristiques : l'estimation s'affiche à droite en quelques secondes. Aucune inscription, rien n'est enregistré à votre nom.</p>
+  <h1>How much is your used vehicle worth?</h1>
+  <p class="lead">Enter its details: the estimate will appear on the right within a few seconds. No registration is required, and nothing is stored under your name.</p>
 
   <div class="layout">
     <form id="form" novalidate>
       <div class="grid">
         <div class="full">
-          <label for="name">Modèle du véhicule <span class="hint">Tapez quelques lettres puis choisissez dans la liste</span></label>
-          <input id="name" list="cars" required autocomplete="off" placeholder="ex. ritz">
+          <label for="name">Vehicle model <span class="hint">Type a few letters, then choose from the list</span></label>
+          <input id="name" list="cars" required autocomplete="off" placeholder="e.g. ritz">
           <datalist id="cars"></datalist>
         </div>
         <div>
-          <label for="year">Année de mise en circulation</label>
+          <label for="year">Year of registration</label>
           <input id="year" type="number" min="1990" max="2100" required placeholder="2015">
         </div>
         <div>
-          <label for="kms">Kilométrage <span class="hint">en km</span></label>
+          <label for="kms">Mileage <span class="hint">in km</span></label>
           <input id="kms" type="number" min="0" step="1000" required placeholder="45000">
         </div>
         <div class="full">
-          <label for="price">Prix du même véhicule neuf aujourd'hui <span class="hint">Même unité que l'estimation affichée</span></label>
+          <label for="price">Price of the same vehicle new today <span class="hint">Same unit as the displayed estimate</span></label>
           <input id="price" type="number" min="0.1" step="0.01" required placeholder="5.6">
         </div>
         <div>
-          <label for="fuel">Carburant</label>
-          <select id="fuel"><option value="Petrol">Essence</option><option value="Diesel">Diesel</option><option value="CNG">Gaz (GNV)</option></select>
+          <label for="fuel">Fuel</label>
+          <select id="fuel"><option value="Petrol">Petrol</option><option value="Diesel">Diesel</option><option value="CNG">CNG</option></select>
         </div>
         <div>
-          <label for="gear">Boîte de vitesses</label>
-          <select id="gear"><option value="Manual">Manuelle</option><option value="Automatic">Automatique</option></select>
+          <label for="gear">Transmission</label>
+          <select id="gear"><option value="Manual">Manual</option><option value="Automatic">Automatic</option></select>
         </div>
         <div>
-          <label for="seller">Vous vendez en tant que</label>
-          <select id="seller"><option value="Individual">Particulier</option><option value="Dealer">Professionnel (concessionnaire)</option></select>
+          <label for="seller">You are selling as</label>
+          <select id="seller"><option value="Individual">Private seller</option><option value="Dealer">Professional (dealer)</option></select>
         </div>
         <div>
-          <label for="owner">Propriétaires précédents</label>
-          <select id="owner"><option value="0">Aucun (première main)</option><option value="1">1</option><option value="2">2</option><option value="3">3 ou plus</option></select>
+          <label for="owner">Previous owners</label>
+          <select id="owner"><option value="0">None (first owner)</option><option value="1">1</option><option value="2">2</option><option value="3">3 or more</option></select>
         </div>
       </div>
       <div class="actions">
-        <button class="primary" id="go" type="submit">Estimer le prix</button>
-        <button class="link" id="example" type="button">Remplir un exemple</button>
+        <button class="primary" id="go" type="submit">Estimate price</button>
+        <button class="link" id="example" type="button">Fill in an example</button>
       </div>
     </form>
 
     <section class="result" aria-live="polite" id="result">
-      <div class="empty"><strong>Votre estimation apparaîtra ici</strong>Remplissez le formulaire, puis cliquez sur « Estimer le prix ».</div>
+      <div class="empty"><strong>Your estimate will appear here</strong>Fill in the form, then click « Estimate price ».</div>
     </section>
   </div>
 </main>
 
 <script>
-const UNIT = "";            // Unité affichée après le prix, ex. "lakhs ₹". Laisser vide si inconnue.
+const UNIT = "";            // Unit displayed after the price, e.g. "lakhs ₹". Leave empty if unknown.
 const $ = (id) => document.getElementById(id);
 let carNames = [], mae = null;
 
@@ -111,9 +111,9 @@ fetch("/options").then(r => r.json()).then(o => {
   $("cars").replaceChildren(...carNames.map(n => Object.assign(document.createElement("option"), {value: n})));
 }).catch(() => {});
 
-const FIELD_LABELS = {Car_Name:"Modèle", Year:"Année", Present_Price:"Prix du neuf", Driven_kms:"Kilométrage",
-  Fuel_Type:"Carburant", Selling_type:"Vendeur", Transmission:"Boîte de vitesses", Owner:"Propriétaires"};
-const fmt = (n) => n.toLocaleString("fr-FR", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const FIELD_LABELS = {Car_Name:"Model", Year:"Year", Present_Price:"New price", Driven_kms:"Mileage",
+  Fuel_Type:"Fuel", Selling_type:"Seller", Transmission:"Transmission", Owner:"Owners"};
+const fmt = (n) => n.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
 const show = (html) => { $("result").innerHTML = html; };
 
 $("example").onclick = () => {
@@ -136,13 +136,13 @@ $("form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const name = $("name").value.trim();
   if (!name || !$("year").value || !$("kms").value || !$("price").value) {
-    show('<div class="error">Merci de remplir tous les champs avant de lancer l\'estimation.</div>'); return;
+    show('<div class="error">Please fill in all fields before starting the estimate.</div>'); return;
   }
   const payload = {Car_Name: name, Year: +$("year").value, Present_Price: +$("price").value, Driven_kms: +$("kms").value,
     Fuel_Type: $("fuel").value, Selling_type: $("seller").value, Transmission: $("gear").value, Owner: +$("owner").value};
 
   $("go").disabled = true;
-  show('<div><div class="spinner"></div><p class="label">Calcul en cours…</p><p class="small" id="slow" hidden>Le service se réveille après une période d\'inactivité : cela peut prendre jusqu\'à une minute.</p></div>');
+  show('<div><div class="spinner"></div><p class="label">Calculating…</p><p class="small" id="slow" hidden>Le service se réveille après une période d\'inactivité : cela peut prendre jusqu\'à une minute.</p></div>');
   const slow = setTimeout(() => { const s = $("slow"); if (s) s.hidden = false; }, 5000);
   const ctrl = new AbortController(), abort = setTimeout(() => ctrl.abort(), 90000);
   try {
@@ -150,18 +150,18 @@ $("form").addEventListener("submit", async (e) => {
     const data = await r.json().catch(() => ({}));
     if (r.status === 422) {
       const field = FIELD_LABELS[(data.detail?.[0]?.loc || []).at(-1)] || "formulaire";
-      throw new Error(`Vérifiez le champ « ${field} » : la valeur saisie n'est pas acceptée.`);
+      throw new Error(`Check the “${field}” field: the entered value is not accepted.`);
     }
-    if (!r.ok) throw new Error("Le service est momentanément indisponible. Réessayez dans un instant.");
+    if (!r.ok) throw new Error("The service is temporarily unavailable. Please try again in a moment.");
     const known = carNames.length === 0 || carNames.includes(name.split(/\s+/).join(" "));
-    show(`<p class="label">Prix de vente estimé</p>
-      <p class="price"><span id="amount">0,00</span></p>${UNIT ? `<span class="unit">${UNIT}</span>` : ""}
+    show(`<p class="label">Estimated selling price</p>
+      <p class="price"><span id="amount">0.00</span></p>${UNIT ? `<span class="unit">${UNIT}</span>` : ""}
       ${mae ? `<div><span class="badge">Écart moyen du modèle : ± ${fmt(mae)}</span></div>` : ""}
       ${known ? "" : '<div class="warn">Ce modèle ne figure pas dans la liste connue : l\'estimation sera moins fiable.</div>'}
-      <p class="small">Estimation indicative calculée à partir de 301 annonces. Elle ne remplace pas l'avis d'un professionnel.</p>`);
+      <p class="small">Indicative estimate calculated from 301 listings. It does not replace a professional valuation.</p>`);
     countUp($("amount"), data.predicted_selling_price);
   } catch (err) {
-    show(`<div class="error">${err.name === "AbortError" ? "Le service met trop de temps à répondre. Réessayez dans un instant." : err.message}</div>`);
+    show(`<div class="error">${err.name === "AbortError" ? "The service is taking too long to respond. Please try again in a moment." : err.message}</div>`);
   } finally { clearTimeout(slow); clearTimeout(abort); $("go").disabled = false; }
 });
 </script>
