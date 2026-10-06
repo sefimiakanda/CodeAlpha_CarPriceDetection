@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: car-price-api
+    runtime: docker
+    plan: free
+    buildCommand: uv sync --locked --no-dev && uv run --no-sync python src/train.py
+    startCommand: uv run --no-sync uvicorn api:app --app-dir src --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
