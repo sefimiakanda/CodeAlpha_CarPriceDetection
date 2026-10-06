@@ -96,23 +96,7 @@ This requires host networking to be enabled in Docker Desktop. If it is not avai
 
 The service is deployed with docker, described entirely by `render.yaml`. Render installs the dependencies with uv, trains the model during the build, then starts the API. No Docker image is needed.
 
-### 1. The Blueprint
-
-`render.yaml` at the root of the repository:
-
-```yaml
-services:
-  - type: web
-    name: car-price-api
-    runtime: docker
-    plan: free
-    buildCommand: uv sync --locked --no-dev && uv run --no-sync python src/train.py
-    startCommand: uv run --no-sync uvicorn api:app --app-dir src --host 0.0.0.0 --port $PORT
-    healthCheckPath: /health
-    autoDeploy: true
-```
-
-### 2. Deploy
+### 1. Deploy
 
 1. Push the repository to GitHub.
 2. In the [Render Dashboard](https://dashboard.render.com), click **New +** → **Blueprint**.
@@ -130,7 +114,7 @@ Check that it works:
 - `/health` → `{"status":"ok"}`;
 - `/docs` → interactive API documentation.
 
-### 3. Updating the deployed app
+### 2. Updating the deployed app
 
 Every `git push` to the linked branch triggers a new build and deployment automatically:
 
@@ -142,7 +126,7 @@ git push
 
 If you change a dependency, run `uv add <package>` locally and commit both `pyproject.toml` and `uv.lock`.
 
-### 4. Free tier limitations
+### 3. Free tier limitations
 
 Free-tier limits change regularly; check Render's pricing page before relying on them.
 
